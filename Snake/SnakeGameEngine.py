@@ -10,6 +10,9 @@ class Point:
     def __eq__(self, other):
         return self.x == other.x and self.y == other.y
 
+    def __str__(self):
+        return "x:" + str(self.x) + " y:" + str(self.y)
+
 
 class Direction(Enum):
     up = 1
@@ -19,20 +22,27 @@ class Direction(Enum):
 
 
 class GameEngine:
-    height = 10
-    width = 10
-
-    headDirection = Direction.right
-    headPosition = Point(width / 2, height / 2)
-    nomNomPosition = Point(width / 2 + 2, height / 2 - 1)
-
-    points = 0
-    isRunning = True
-    isWon = False
-
     def __init__(self, height, width):
         self.height = height
         self.width = width
+
+        self.restart()
+
+    def restart(self):
+        self.headPosition = Point(self.width / 2, self.height / 2)
+        self.nomNomPosition = Point(self.width / 2 + 2, self.height / 2 - 1)
+        self.headDirection = Direction.right
+
+        self.points = 0
+        self.isRunning = True
+        self.isWon = False
+
+        self.start()
+
+    def start(self):
+        self.spawnNomNom()
+        self.isRunning = True
+        self.isWon = False
 
     def rotateRight(self):
         if self.headDirection == Direction.left:
@@ -83,6 +93,8 @@ class GameEngine:
         self.nomNomPosition.x = randint(0, self.width - 1)
         self.nomNomPosition.y = randint(0, self.height - 1)
 
+        return (self.nomNomPosition)
+
     def eatNomNom(self):
         self.points += 1
         self.spawnNomNom()
@@ -94,3 +106,6 @@ class GameEngine:
     def gameWon(self):
         self.isRunning = True
         self.isWon = True
+
+    def draw(self):
+        return self.headPosition
